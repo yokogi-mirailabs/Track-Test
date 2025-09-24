@@ -44,7 +44,7 @@ class RecipeController extends Controller
             $recipe = Recipe::create($validated);
 
             return response()->json([
-                'message' => 'Recipe successfully created',
+                'message' => 'Recipe successfully created!',
                 'recipe' => $recipe,
             ]);
         } catch (\Exception $e) {
@@ -99,7 +99,7 @@ class RecipeController extends Controller
             $recipe->update($validated);
 
             return response()->json([
-                'message' => 'Recipe successfully updated!',
+                'message' => 'Recipe successfully updated',
                 'recipe' => [
                     'title' => $validated['title'],
                     'making_time' => $validated['making_time'],
