@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Recipe;
+use App\Http\Requests\Recipe\StoreRecipeRequest;
+use App\Http\Requests\Recipe\UpdateRecipeRequest;
 
 class RecipeController extends Controller
 {
@@ -30,22 +32,25 @@ class RecipeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRecipeRequest $request)
     {
         try {
-            $validated = $request->validate([
-                'title' => 'required|string|max:100',
-                'making_time' => 'required|string|max:100',
-                'serves' => 'required|string|max:100',
-                'ingredients' => 'required|string|max:300',
-                'cost' => 'required|integer',
-            ]);
-
-            $recipe = Recipe::create($validated);
+            $recipe = Recipe::create($request->validated());
 
             return response()->json([
                 'message' => 'Recipe successfully created!',
-                'recipe' => $recipe,
+                'recipe' => [
+                    [
+                        'id' => $recipe->id,
+                        'title' => $recipe->title,
+                        'making_time' => $recipe->making_time,
+                        'serves' => $recipe->serves,
+                        'ingredients' => $recipe->ingredients,
+                        'cost' => $recipe->cost,
+                        'created_at' => $recipe->created_at->format('Y-m-d H:i:s'),
+                        'updated_at' => $recipe->updated_at->format('Y-m-d H:i:s')
+                    ]
+                ]
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -84,18 +89,18 @@ class RecipeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRecipeRequest $request, string $id)
     {
         try {
-            $validated = $request->validate([
-                'title' => 'required|string|max:100',
-                'making_time' => 'required|string|max:100',
-                'serves' => 'required|string|max:100',
-                'ingredients' => 'required|string|max:300',
-                'cost' => 'required|integer',
-            ]);
-
+            $validated = $request->validated();
             $recipe = Recipe::find($id);
+
+            if (!$recipe) {
+                return response()->json([
+                    'message' => 'No Recipe found',
+                ], 404);
+            }
+
             $recipe->update($validated);
 
             return response()->json([
