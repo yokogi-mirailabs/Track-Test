@@ -66,19 +66,30 @@ class RecipeController extends Controller
     public function show(string $id)
     {
         try {
-            if (!$id) {
-                $firstRecipe = Recipe::first();
-                return response()->json([
-                    'message' => 'Recipe details by id',
-                    'recipe' => $firstRecipe,
-                ]);
-            } else {
-                $recipe = Recipe::find($id);
-                return response()->json([
-                    'message' => 'Recipe details by id',
-                    'recipe' => $recipe,
-                ]);
+            $recipe = Recipe::find($id);
+
+            if (!$recipe) {
+                $recipe = Recipe::find(1);
             }
+
+            if (!$recipe) {
+                return response()->json([
+                    'message' => 'No Recipe found',
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Recipe details by id',
+                'recipe' => [
+                    'id' => $recipe->id,
+                    'title' => $recipe->title,
+                    'making_time' => $recipe->making_time,
+                    'serves' => $recipe->serves,
+                    'ingredients' => $recipe->ingredients,
+                    'cost' => $recipe->cost,
+                ],
+            ]);
+
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Recipe details by id not found',
