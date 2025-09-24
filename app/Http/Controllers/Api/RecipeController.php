@@ -81,12 +81,14 @@ class RecipeController extends Controller
             return response()->json([
                 'message' => 'Recipe details by id',
                 'recipe' => [
-                    'id' => $recipe->id,
-                    'title' => $recipe->title,
-                    'making_time' => $recipe->making_time,
-                    'serves' => $recipe->serves,
-                    'ingredients' => $recipe->ingredients,
-                    'cost' => $recipe->cost,
+                    [
+                        'id' => $recipe->id,
+                        'title' => $recipe->title,
+                        'making_time' => $recipe->making_time,
+                        'serves' => $recipe->serves,
+                        'ingredients' => $recipe->ingredients,
+                        'cost' => $recipe->cost,
+                    ]
                 ],
             ]);
 
