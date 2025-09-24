@@ -15,7 +15,7 @@ use App\Http\Controllers\RecipeController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    abort(404);
 });
 
 // Web側のレシピルートは削除（API側で管理）
